@@ -79,11 +79,26 @@ ________________________________________
 •	Confusion matrix (optional)
 Evaluation ensures the model generalizes well on unseen medical images.
 ________________________________________
-🌐 Web Application Flow
-1.  User uploads a medical image
-2. Backend preprocesses the image
-3. Trained model predicts the disease
-4. Result is displayed on the web interface
+## 🧠 System Architecture
+
+```mermaid
+graph TD
+A[User] --> B[Web Interface]
+B --> C[Image Upload Module]
+C --> D[Image Preprocessing]
+D --> D1[Resize Image]
+D --> D2[Normalization]
+D --> D3[Data Augmentation]
+D --> E[Trained ML Model]
+E --> E1[CNN / Deep Learning Model]
+E --> F[Prediction Engine]
+F --> G[Disease Classification]
+G --> H[Result Processing]
+H --> I[Prediction Output]
+H --> J[Confidence Score]
+I --> K[Display Result to User]
+J --> K
+```
 ________________________________________
 
 📂 Project Structure
