@@ -93,12 +93,8 @@ async def load_models():
             raise
 
     # Load cardio model if available
-    try:
-        models["cardio"] = joblib.load("model/cardio_model.joblib")
-        models["cardio_scaler"] = joblib.load("model/cardio_scaler.joblib")
-        logger.info("Loaded cardio model successfully")
-    except Exception as e:
-        logger.warning(f"Could not load cardio model: {str(e)}")
+    logger.info("Cardio model disabled (image-based prediction only)")
+
 
 def preprocess_cardio_input(df: pd.DataFrame, scaler: StandardScaler) -> pd.DataFrame:
     """Process cardiovascular input data"""
@@ -170,25 +166,5 @@ async def predict_disease(file: UploadFile = File(...)):
         return best_prediction or {"error": "No valid predictions from any model"}
 
     # Handle CSV/cardio prediction
-    try:
-        with tempfile.NamedTemporaryFile(delete=False) as tmp:
-            tmp.write(contents)
-            tmp.flush()
-            df = pd.read_csv(tmp.name)
-        
-        scaler = models["cardio_scaler"]
-        model = models["cardio"]
-        X = preprocess_cardio_input(df, scaler)
-        
-        prediction = model.predict_proba(X)
-        confidence = float(np.max(prediction))
-        class_index = int(np.argmax(prediction, axis=1)[0])
-        
-        return {
-            "diagnosis": "Disease" if class_index == 1 else "No Disease",
-            "confidence": round(confidence, 4),
-            "model_used": "CARDIO"
-        }
-    except Exception as e:
-        logger.error(f"Cardio prediction failed: {str(e)}")
-        return {"error": "Failed to process cardio data"}
+    return {"error": "Only image-based prediction is supported"}
+
