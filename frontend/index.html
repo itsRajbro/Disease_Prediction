@@ -5,68 +5,133 @@
     <title>Disease Prediction System</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
+            font-family: "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            color: #111;
         }
+
         .card {
-            background: white;
+            background: #ffffff;
             padding: 30px;
-            border-radius: 10px;
-            width: 350px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border-radius: 14px;
+            width: 360px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
             text-align: center;
         }
+
+        h2 {
+            margin-bottom: 10px;
+            color: #1e3a8a;
+        }
+
         input[type="file"] {
             margin: 15px 0;
         }
+
         button {
-            padding: 10px 20px;
-            border: none;
+            width: 100%;
+            padding: 12px;
             background: #2563eb;
+            border: none;
             color: white;
-            border-radius: 5px;
+            border-radius: 8px;
+            font-size: 15px;
             cursor: pointer;
         }
+
         button:hover {
             background: #1e40af;
         }
+
+        .loading {
+            margin-top: 15px;
+            color: #555;
+        }
+
         .result {
             margin-top: 20px;
-            font-weight: bold;
+            padding: 15px;
+            border-radius: 10px;
+            background: #f1f5f9;
+            display: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            background: #2563eb;
+            color: white;
+            border-radius: 6px;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .confidence-bar {
+            background: #e5e7eb;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .confidence-fill {
+            height: 10px;
+            background: #22c55e;
+            width: 0%;
+        }
+
+        .error {
+            color: #dc2626;
+            margin-top: 15px;
         }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h2>Disease Prediction</h2>
+    <h2>AI Disease Prediction</h2>
+    <p>Upload a medical image</p>
 
     <input type="file" id="fileInput" accept="image/*">
-    <br>
     <button onclick="predict()">Predict</button>
 
-    <div class="result" id="result"></div>
+    <div class="loading" id="loading"></div>
+    <div class="error" id="error"></div>
+
+    <div class="result" id="result">
+        <div class="badge" id="modelUsed"></div>
+        <h3 id="diagnosis"></h3>
+
+        <div class="confidence-bar">
+            <div class="confidence-fill" id="confidenceFill"></div>
+        </div>
+        <p id="confidenceText"></p>
+    </div>
 </div>
 
 <script>
 async function predict() {
     const fileInput = document.getElementById("fileInput");
-    const resultDiv = document.getElementById("result");
+    const loading = document.getElementById("loading");
+    const error = document.getElementById("error");
+    const result = document.getElementById("result");
+
+    error.innerText = "";
+    result.style.display = "none";
 
     if (!fileInput.files.length) {
-        resultDiv.innerText = "❌ Please upload an image";
+        error.innerText = "Please upload an image.";
         return;
     }
 
     const formData = new FormData();
     formData.append("file", fileInput.files[0]);
 
-    resultDiv.innerText = "⏳ Predicting...";
-
+    loading.innerText = "Predicting...";
+    
     try {
         const response = await fetch("http://127.0.0.1:8000/predict", {
             method: "POST",
@@ -74,18 +139,26 @@ async function predict() {
         });
 
         const data = await response.json();
+        loading.innerText = "";
 
         if (data.error) {
-            resultDiv.innerText = "❌ " + data.error;
-        } else {
-            resultDiv.innerHTML = `
-                🧠 Disease: <b>${data.diagnosis}</b><br>
-                📊 Confidence: <b>${data.confidence}</b><br>
-                🤖 Model: <b>${data.model_used}</b>
-            `;
+            error.innerText = data.error;
+            return;
         }
+
+        document.getElementById("modelUsed").innerText = data.model_used;
+        document.getElementById("diagnosis").innerText = data.diagnosis;
+
+        const confidencePercent = Math.round(data.confidence * 100);
+        document.getElementById("confidenceFill").style.width = confidencePercent + "%";
+        document.getElementById("confidenceText").innerText =
+            "Confidence: " + confidencePercent + "%";
+
+        result.style.display = "block";
+
     } catch (err) {
-        resultDiv.innerText = "❌ Server not reachable";
+        loading.innerText = "";
+        error.innerText = "Backend not reachable. Is the server running?";
     }
 }
 </script>
