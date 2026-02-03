@@ -1,6 +1,8 @@
 🩺 AI-Based Disease Prediction System
-An end-to-end Machine Learning powered Disease Prediction Web Application that predicts diseases from medical images using Deep Learning, with a clean dataset pipeline and a simple web interface for real-world usability.
-This project demonstrates the complete ML lifecycle — from data organization and preprocessing to model training, evaluation, and deployment — making it suitable for internship and entry-level ML/AI roles.
+An end-to-end **Machine Learning + FastAPI** powered Disease Prediction Web Application that predicts diseases from medical images using Deep Learning.
+
+This project demonstrates the **complete ML lifecycle** — from dataset preparation and model training to API deployment and frontend integration — making it suitable for **internships and entry-level ML/AI roles**.
+
 ________________________________________
 📌 Project Overview
 Early and accurate disease detection plays a crucial role in modern healthcare.
@@ -12,31 +14,40 @@ This project focuses on building an AI-driven disease prediction system that:
 The system is designed to be scalable, modular, and easy to understand, even for beginners in Machine Learning.
 ________________________________________
 🚀 Features
-•	📂 Well-structured dataset pipeline
-•	🧠 Deep Learning based disease classification
-•	🖼️ Image preprocessing & resizing
-•	🔁 Multi-label handling (image duplication for multiple diseases)
-•	🌐 Web-based prediction interface
-•	📊 Model evaluation & performance tracking
-•	🧪 Train / Test separation
+•	🧠 Multiple Deep Learning models
+  • Chest X-ray Disease Detection
+  • Malaria Detection
+  • Ocular Disease Detection
+• 🖼️ Image preprocessing (resize, normalization, grayscale handling)
+• ⚡ FastAPI backend with REST API
+• 📄 Interactive API docs (Swagger UI)
+• 🌐 Simple frontend (HTML + JavaScript)
+• 📊 Confidence-based prediction output
+• 🔌 Modular and scalable architecture
 ________________________________________
 🛠️ Tech Stack
-🔹 Machine Learning & AI
-•	Python
-•	NumPy
-•	Pandas
-•	OpenCV
-•	TensorFlow / Keras
-•	Scikit-learn
-🔹 Web Development
-•	HTML
-•	CSS
-•	JavaScript
-•	Flask (Backend)
-🔹 Tools & Platform
-•	Google Colab / Local Python Environment
-•	Kaggle Dataset
-•	Git & GitHub
+### Machine Learning & AI
+- Python
+- TensorFlow / Keras
+- NumPy
+- Pandas
+- Scikit-learn
+- Pillow (PIL)
+
+### Backend
+- FastAPI
+- Uvicorn
+
+### Frontend
+- HTML
+- CSS
+- JavaScript
+- Live Server (VS Code)
+
+### Tools
+- Git & GitHub
+- VS Code
+- Virtual Environment (venv)
 ________________________________________
 📁 Dataset Description
 The project uses medical image datasets (such as ocular/skin disease datasets) sourced from Kaggle.
@@ -102,41 +113,50 @@ J --> K
 ________________________________________
 
 📂 Project Structure
-disease-prediction-project/
-│
-├── dataset/
-│   ├── train/
-│   ├── test/
-│
-├── preprocessing/
-│   └── preprocess.py
+Disease_Prediction/
 │
 ├── model/
-│   ├── train.py
-│   └── model.h5
+│ ├── cxr_model.h5
+│ ├── malaria_model.keras
+│ ├── ocular_model.keras
+│ └── cardio_scaler.joblib
 │
-├── static/
-│   └── styles.css
+├── frontend/
+│ └── index.html
 │
-├── templates/
-│   └── index.html
+├── combined_dataset_cxr/
+├── combined_dataset_malaria/
+├── combined_dataset_ocular/
 │
-├── app.py
-├── requirements.txt
-└── README.md
+├── main.py
+├── requirements.txt.txt
+├── README.md
+└── version.py
+________________________________________
+## ⚙️ How to Run Locally
+
+### 1️⃣ Clone the repository
+```bash
+git clone https://github.com/itsRajbro/Disease_Prediction.git
+cd Disease_Prediction
+### 2️⃣ Install Dependencies
+```bash
+pip install -r requirements.txt
+
 ________________________________________
 🎯 Learning Outcomes
 •	End-to-end ML project development
 •	Medical image handling & preprocessing
 •	CNN-based image classification
-•	Model deployment using Flask
-•	Dataset structuring for multi-label problems
-•	Real-world AI project experience
+•   FastAPI backend development
+•   REST API integration
+•	Frontend–backend communication
+•	Model deployment workflow
 ________________________________________
 🔮 Future Improvements
 •	🔹 Add more disease classes
 •	🔹 Improve accuracy with transfer learning (ResNet, EfficientNet)
-•	🔹 Add authentication system
+•	🔹 Add authentication system and user history
 •	🔹 Deploy on cloud (AWS / Render / HuggingFace Spaces)
 •	🔹 Add explainability (Grad-CAM)
 ________________________________________

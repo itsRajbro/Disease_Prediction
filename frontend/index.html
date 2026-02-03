@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Disease Prediction System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 350px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        input[type="file"] {
+            margin: 15px 0;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background: #2563eb;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #1e40af;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Disease Prediction</h2>
+
+    <input type="file" id="fileInput" accept="image/*">
+    <br>
+    <button onclick="predict()">Predict</button>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+async function predict() {
+    const fileInput = document.getElementById("fileInput");
+    const resultDiv = document.getElementById("result");
+
+    if (!fileInput.files.length) {
+        resultDiv.innerText = "❌ Please upload an image";
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", fileInput.files[0]);
+
+    resultDiv.innerText = "⏳ Predicting...";
+
+    try {
+        const response = await fetch("http://127.0.0.1:8000/predict", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+            resultDiv.innerText = "❌ " + data.error;
+        } else {
+            resultDiv.innerHTML = `
+                🧠 Disease: <b>${data.diagnosis}</b><br>
+                📊 Confidence: <b>${data.confidence}</b><br>
+                🤖 Model: <b>${data.model_used}</b>
+            `;
+        }
+    } catch (err) {
+        resultDiv.innerText = "❌ Server not reachable";
+    }
+}
+</script>
+
+</body>
+</html>
