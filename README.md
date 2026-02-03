@@ -133,15 +133,15 @@ Disease_Prediction/
 ├── README.md
 └── version.py
 ________________________________________
-## ⚙️ How to Run Locally
+    ## ⚙️ How to Run Locally
 
-### 1️⃣ Clone the repository
-```bash
-git clone https://github.com/itsRajbro/Disease_Prediction.git
-cd Disease_Prediction
-### 2️⃣ Install Dependencies
-```bash
-pip install -r requirements.txt
+    ### 1️⃣ Clone the repository
+    ```bash
+    git clone https://github.com/itsRajbro/Disease_Prediction.git
+    cd Disease_Prediction
+    ### 2️⃣ Install Dependencies
+    ```bash
+    pip install -r requirements.txt
 
 ________________________________________
 🎯 Learning Outcomes
