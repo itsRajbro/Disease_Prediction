@@ -1,3 +1,5 @@
+import os
+os.environ["TF_USE_LEGACY_KERAS"] = "1"
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from PIL import Image
@@ -38,7 +40,7 @@ app.add_middleware(
 # Model configuration
 MODELS: Dict[str, Dict[str, Any]] = {
     "cxr": {
-        "path": "model/cxr_model.h5",
+        "path": "model/cxr_model.keras",
         "classes": ["COVID19", "NORMAL", "PNEUMONIA", "TUBERCULOSIS"],
         "img_size": (224, 224),
         "grayscale": False
@@ -79,14 +81,12 @@ def preprocess_image(image_bytes: bytes, img_size: tuple, grayscale: bool = Fals
 @app.on_event("startup")
 async def load_models():
     """Load all models at startup with proper error handling"""
+    import tensorflow as tf
+
     for disease_type, config in MODELS.items():
         model_path = config["path"]
         try:
-            if model_path.endswith(".keras"):
-                models[disease_type] = keras.saving.load_model(model_path)
-            else:
-                import tensorflow as tf
-                models[disease_type] = tf.keras.models.load_model(model_path)
+            models[disease_type] = tf.keras.models.load_model(model_path, compile=False)
             logger.info(f"Successfully loaded {disease_type} model")
         except Exception as e:
             logger.error(f"Failed to load {disease_type} model: {str(e)}")
