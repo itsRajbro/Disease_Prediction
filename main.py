@@ -1,5 +1,3 @@
-import os
-os.environ["TF_USE_LEGACY_KERAS"] = "1"
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from PIL import Image
