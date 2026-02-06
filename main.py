@@ -75,16 +75,16 @@ def preprocess_image(image_bytes: bytes, img_size: tuple, grayscale: bool = Fals
     except Exception as e:
         logger.error(f"Image preprocessing failed: {str(e)}")
         raise ValueError("Invalid image file")
-
+import keras
 @app.on_event("startup")
 async def load_models():
     """Load all models at startup with proper error handling"""
-    import tensorflow as tf
+    # import tensorflow as tf
 
     for disease_type, config in MODELS.items():
         model_path = config["path"]
         try:
-            models[disease_type] = tf.keras.models.load_model(model_path, compile=False)
+            models[disease_type] = keras.saving.load_model(model_path, compile=False)
             logger.info(f"Successfully loaded {disease_type} model")
         except Exception as e:
             logger.error(f"Failed to load {disease_type} model: {str(e)}")
