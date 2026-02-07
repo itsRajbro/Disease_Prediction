@@ -78,24 +78,20 @@ def preprocess_image(image_bytes: bytes, img_size: tuple, grayscale: bool = Fals
 
 @app.on_event("startup")
 async def load_models():
-    """Load all models at startup with proper error handling"""
     import tensorflow as tf
-    from tensorflow import keras
+    import os
+
+    base_dir = os.path.dirname(os.path.abspath(__file__))
 
     for disease_type, config in MODELS.items():
-        model_path = config["path"]
+        model_path = os.path.join(base_dir, "model", os.path.basename(config["path"]))
         try:
-            model = tf.keras.models.load_model(
-                model_path,
-                compile=False,
-                safe_mode=False  # avoids Keras 3 deserialization issues
-            )
-
-            models[disease_type] = model
-            logger.info(f"Successfully loaded {disease_type} model from {model_path}")
+            models[disease_type] = tf.keras.models.load_model(model_path, compile=False)
+            logger.info(f"Loaded {disease_type} model from {model_path}")
         except Exception as e:
-            logger.error(f"Failed to load {disease_type} model at {model_path}: {e}", exc_info=True)
+            logger.error(f"Failed to load {disease_type} model at {model_path}: {str(e)}")
             raise
+
 
     # Load cardio model if available
     logger.info("Cardio model disabled (image-based prediction only)")
