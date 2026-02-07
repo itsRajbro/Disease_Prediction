@@ -24,7 +24,6 @@ env/
 Thumbs.db
 
 # Model and ML files
-*.h5
 *.hdf5
 *.ckpt
 *.pb
